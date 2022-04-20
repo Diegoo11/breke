@@ -3,14 +3,26 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var router = express.Router();
 
-var indexRouter = require('./routes/index');
+
 var usersRouter = require('./routes/users');
 const formRouter = require('./routes/form')
 
 var app = express();
 
-const messages = []
+const messages = [
+  {
+    text:  "Hi there!",
+    user: "Diegoo",
+    added: new Date(),
+  },
+  {
+    text: "Hello world!",
+    user: "Charles",
+    added: new Date(),
+  }
+]
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,14 +34,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.get('/', function(req, res, next) {
+  res.render('index', { title: 'Mini Messageboard', messages: messages });
+});
+
 app.use('/users', usersRouter);
 
 app.use('/new', formRouter)
 app.post('/new', function (req, res) {
   const name = req.body.name
   const text = req.body.text
-  messages.push({name: name, text: text})
+  messages.push({user: name, text: text, added: new Date()})
   res.redirect('/')
 })
 
