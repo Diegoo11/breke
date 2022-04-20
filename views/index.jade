@@ -4,7 +4,8 @@ block content
   h1= title
   p Welcome to #{title}
 
-  - for (var x = 0; x<1; x++)
-  h1= messages[x].text
-  p Hi #{messages[x].user}
-  
+  - var anyArray = messages
+  each value in anyArray
+    h1= value.user
+    p= value.text
+    p= value.added
